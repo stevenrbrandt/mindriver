@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn HPXDriver
+
+# Source files in this directory
+SRCS = Driver.cc
+
+# Subdirectories containing source files
+SUBDIRS = 

@@ -1,0 +1,12 @@
+storage: metric_exact[1]
+
+schedule Driver_Startup at STARTUP 
+{
+  LANG: C
+} "Startup routine"
+
+schedule evol_here at CCTK_EVOL
+{
+  LANG: C
+  READS: metric_exact(everywhere)
+} "Test evol"
