@@ -1,0 +1,14 @@
+ActiveThorns = "MinDriver CartGrid3D CoordBase"
+
+CartGrid3D::type              = "coordbase"
+
+CoordBase::domainsize = "minmax"
+CoordBase::xmin       = -10.0
+CoordBase::ymin       = -10.0
+CoordBase::zmin       = -10.0
+CoordBase::xmax       = +10.0
+CoordBase::ymax       = +10.0
+CoordBase::zmax       = +10.0
+CoordBase::dx         =   0.5
+CoordBase::dy         =   0.5
+CoordBase::dz         =   0.5
