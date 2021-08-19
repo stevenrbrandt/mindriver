@@ -100,8 +100,6 @@ cGH *InstantiateGH(tFleshConfig *const fc,int conv_level)
     thisGH->cctk_tile_max     = new int[cctk_dim];
 
     thisGH->cctk_ash          = new int[cctk_dim];
-    thisGH->cctk_to           = new int[cctk_dim];
-    thisGH->cctk_from         = new int[cctk_dim];
     thisGH->cctk_bbox         = new int[2*cctk_dim];
     thisGH->cctk_nghostzones  = new int[2*cctk_dim];
     thisGH->cctk_levfac       = new int[cctk_dim];
@@ -138,17 +136,37 @@ cGH *InstantiateGH(tFleshConfig *const fc,int conv_level)
     real3d exterior_min, exterior_max;
     real3d base_spacing;
 
+    // Set the values in the lsh and ash arrays
+    for(int i=0;i < 2*cctk_dim;i++) {
+        thisGH->cctk_bbox[i] = 1;
+    }
+    for(int i=0;i < cctk_dim;i++) {
+        thisGH->cctk_levfac[i] = 1;
+        thisGH->cctk_levoff[i] = 0;
+        thisGH->cctk_levoffdenom[i] = 1;
+        thisGH->cctk_nghostzones[i] = 1;
+    }
+
     int ierr = GetDomainSpecification(
         cctk_dim, &physical_min[0], &physical_max[0], &interior_min[0],
         &interior_max[0], &exterior_min[0], &exterior_max[0], &base_spacing[0]);
     assert(not ierr);
+    std::cout << "Base:" << base_spacing[0] << " " << base_spacing[1] << " " << base_spacing[2] << std::endl;
 
-    // Set the values in the lsh and ash arrays
     for(int i=0;i < cctk_dim;i++) {
         thisGH->cctk_ash[i] =
             std::ceil((exterior_max[i] - exterior_min[i])/base_spacing[i]);
         thisGH->cctk_lsh[i] =
             std::ceil((interior_max[i] - interior_min[i])/base_spacing[i]);
+        thisGH->cctk_gsh[i] =
+            std::ceil((interior_max[i] - interior_min[i])/base_spacing[i]);
+        thisGH->cctk_ubnd[i] =
+            std::ceil((interior_max[i] - interior_min[i])/base_spacing[i]);
+        thisGH->cctk_lbnd[i] = 0;
+        thisGH->cctk_delta_space[i] = base_spacing[i];
+        thisGH->cctk_origin_space[i] = exterior_min[i];
+        std::cout << "DELTA_SPACE(" << i << ")="
+            << (thisGH->cctk_delta_space[i]/thisGH->cctk_levfac[i]) << std::endl;
     }
 
     return thisGH;
@@ -242,10 +260,12 @@ int GroupStorageCrease(const cGH *cctkGH, int n_groups, const int *groups,
     std::cout << "Calling De/Increase...\n";
     for(int i=0;i<n_groups;i++) {
         int ntls = requested_tls[i];
+        std::cout << "ntls=" << ntls <<std::endl;
         int const group = groups[i];
         int const declared_tls = CCTK_DeclaredTimeLevelsGI(group);
         if(ntls < declared_tls)
             ntls = declared_tls;
+        std::cout << "ntls=" << ntls <<std::endl;
 
         int otls = 0;
         bool init = false;
@@ -259,6 +279,8 @@ int GroupStorageCrease(const cGH *cctkGH, int n_groups, const int *groups,
         } else {
             otls = fgroup->second;
         }
+        std::cout << "otls=" << otls << std::endl;
+        std::cout << "ntls=" << ntls << std::endl;
         if(otls == ntls) {
             return 0;
         }
