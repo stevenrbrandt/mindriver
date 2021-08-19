@@ -9,7 +9,8 @@ CCTK_REAL metric_exact type=GF timelevels=1
   g11
 } "metric_exact"
 
-# The overall size of the domain
+# We need load this to set up the coordinates
+# from CoordBase and CartGrid3D
 CCTK_INT FUNCTION GetDomainSpecification \
   (CCTK_INT IN size, \
    CCTK_REAL OUT ARRAY physical_min, \
@@ -20,3 +21,42 @@ CCTK_INT FUNCTION GetDomainSpecification \
    CCTK_REAL OUT ARRAY exterior_max, \
    CCTK_REAL OUT ARRAY spacing)
 USES FUNCTION GetDomainSpecification
+
+# We need to provide the following 3 functions to use IOASCII
+CCTK_INT FUNCTION \
+  Hyperslab_GetList (CCTK_POINTER_TO_CONST IN cctkGH, \
+                     CCTK_INT IN mapping_handle, \
+                     CCTK_INT IN num_arrays, \
+                     CCTK_INT ARRAY IN procs, \
+                     CCTK_INT ARRAY IN vindices, \
+                     CCTK_INT ARRAY IN timelevels, \
+                     CCTK_INT ARRAY IN hdatatypes, \
+                     CCTK_POINTER ARRAY IN hdata, \
+                     CCTK_INT ARRAY OUT retvals)
+PROVIDES FUNCTION Hyperslab_GetList \
+  WITH MinDriverSlab_GetList LANGUAGE C
+
+CCTK_INT FUNCTION Hyperslab_FreeMapping (CCTK_INT IN mapping_handle)
+PROVIDES FUNCTION Hyperslab_FreeMapping \
+  WITH MinDriverSlab_FreeMapping LANGUAGE C
+
+CCTK_INT FUNCTION \
+  Hyperslab_GlobalMappingByIndex (CCTK_POINTER_TO_CONST IN cctkGH, \
+                                  CCTK_INT IN vindex, \
+                                  CCTK_INT IN hdim, \
+                                  CCTK_INT ARRAY IN direction, \
+                                  CCTK_INT ARRAY IN origin, \
+                                  CCTK_INT ARRAY IN extent, \
+                                  CCTK_INT ARRAY IN downsample, \
+                                  CCTK_INT IN table_handle, \
+                                  CCTK_INT CCTK_FPOINTER IN \
+                                    conversion_fn (CCTK_INT IN nelems, \
+                                                   CCTK_INT IN src_stride, \
+                                                   CCTK_INT IN dst_stride, \
+                                                   CCTK_INT IN src_type, \
+                                                   CCTK_INT IN dst_type, \
+                                                   CCTK_POINTER_TO_CONST IN from, \
+                                                   CCTK_POINTER IN to), \
+                                  CCTK_INT ARRAY OUT hsize)
+PROVIDES FUNCTION Hyperslab_GlobalMappingByIndex \
+  WITH MinDriverSlab_GlobalMappingByIndex LANGUAGE C

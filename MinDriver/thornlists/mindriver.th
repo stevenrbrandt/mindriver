@@ -35,7 +35,7 @@ CactusBase/CartGrid3D
 CactusBase/CoordBase
 CactusBase/Fortran
 CactusBase/InitBase
-#CactusBase/IOASCII
+CactusBase/IOASCII
 CactusBase/IOBasic
 CactusBase/IOUtil
 CactusBase/SymBase
@@ -55,3 +55,49 @@ CactusBase/Time
 !URL      = https://bitbucket.org/cactuscode/cactus.git
 !NAME     = flesh
 !CHECKOUT = .clang-format CONTRIBUTORS COPYRIGHT doc lib Makefile src
+
+# CactusNumerical thorns
+!TARGET   = $ARR
+!TYPE     = git
+!URL      = https://bitbucket.org/cactuscode/cactusnumerical.git
+!REPO_PATH= $2
+!CHECKOUT =
+#CactusNumerical/Cartoon2D
+#CactusNumerical/Dissipation
+#CactusNumerical/InterpToArray
+#CactusNumerical/LocalInterp
+#CactusNumerical/LocalInterp2
+#CactusNumerical/LocalReduce
+CactusNumerical/MoL
+#CactusNumerical/Noise
+#CactusNumerical/Norms
+#CactusNumerical/Periodic
+#CactusNumerical/ReflectionSymmetry
+#CactusNumerical/RotatingSymmetry180
+#CactusNumerical/RotatingSymmetry90
+#CactusNumerical/Slab
+#CactusNumerical/SlabTest
+#CactusNumerical/SpaceMask
+#CactusNumerical/SphericalSurface
+#CactusNumerical/SummationByParts
+#CactusNumerical/TensorTypes
+#CactusNumerical/TestLocalInterp2
+#CactusNumerical/TestLocalReduce
+
+# CactusWave thorns
+!TARGET   = $ARR
+!TYPE     = git
+!URL      = https://bitbucket.org/cactuscode/cactuswave.git
+!REPO_PATH= $2
+!CHECKOUT =
+CactusWave/IDScalarWave
+CactusWave/IDScalarWaveC
+CactusWave/IDScalarWaveCXX
+#CactusWave/IDScalarWaveElliptic
+CactusWave/WaveBinarySource
+CactusWave/WaveToyC
+CactusWave/WaveToyCXX
+CactusWave/WaveToyExtra
+CactusWave/WaveToyF77
+CactusWave/WaveToyF90
+CactusWave/WaveToyFreeF90
